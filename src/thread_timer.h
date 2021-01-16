@@ -33,8 +33,18 @@ class ThreadTimer {
     real_time_used_ += ChronoClockNow() - start_real_time_;
     // Floating point error can result in the subtraction producing a negative
     // time. Guard against that.
-    cpu_time_used_ +=
-        std::max<double>(ReadCpuTimerOfChoice() - start_cpu_time_, 0);
+    cpu_time_used_ += std::max<double>(
+        ReadCpuTimerOfChoice() - start_cpu_time_, 0);
+  }
+
+  void BeginSuspend() {
+    suspend_real_time_ -= ChronoClockNow();
+    suspend_cpu_time_ -= ReadCpuTimerOfChoice();
+  }
+
+  void EndSuspend() {
+    suspend_real_time_ += ChronoClockNow();
+    suspend_cpu_time_ += ReadCpuTimerOfChoice();
   }
 
   // Called by each thread
@@ -55,6 +65,18 @@ class ThreadTimer {
   }
 
   // REQUIRES: timer is not running
+  double real_time_suspended() const {
+    CHECK(!running_);
+    return suspend_real_time_;
+  }
+
+  // REQUIRES: timer is not running
+  double cpu_time_suspended() const {
+    CHECK(!running_);
+    return suspend_cpu_time_;
+  }
+
+  // REQUIRES: timer is not running
   double manual_time_used() const {
     CHECK(!running_);
     return manual_time_used_;
@@ -72,6 +94,9 @@ class ThreadTimer {
   bool running_ = false;        // Is the timer running
   double start_real_time_ = 0;  // If running_
   double start_cpu_time_ = 0;   // If running_
+
+  double suspend_real_time_ = 0;  // If running_
+  double suspend_cpu_time_ = 0;   // If running_
 
   // Accumulated time so far (does not contain current slice if running_)
   double real_time_used_ = 0;

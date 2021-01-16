@@ -85,9 +85,9 @@ BenchmarkReporter::Run CreateRunReport(
     if (b.use_manual_time) {
       report.real_accumulated_time = results.manual_time_used;
     } else {
-      report.real_accumulated_time = results.real_time_used;
+      report.real_accumulated_time = results.real_time_used - results.real_time_suspended;
     }
-    report.cpu_accumulated_time = results.cpu_time_used;
+    report.cpu_accumulated_time = results.cpu_time_used - results.cpu_time_suspended;
     report.complexity_n = results.complexity_n;
     report.complexity = b.complexity;
     report.complexity_lambda = b.complexity_lambda;
@@ -125,6 +125,8 @@ void RunInThread(const BenchmarkInstance* b, IterationCount iters,
     results.iterations += st.iterations();
     results.cpu_time_used += timer.cpu_time_used();
     results.real_time_used += timer.real_time_used();
+    results.cpu_time_suspended += timer.cpu_time_suspended();
+    results.real_time_suspended += timer.real_time_suspended();
     results.manual_time_used += timer.manual_time_used();
     results.complexity_n += st.complexity_length_n();
     internal::Increment(&results.counters, st.counters);

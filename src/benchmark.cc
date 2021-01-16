@@ -170,6 +170,16 @@ void State::ResumeTiming() {
   timer_->StartTimer();
 }
 
+void State::BeginSuspendTiming() {
+  CHECK(started_ && !finished_ && !error_occurred_);
+  timer_->BeginSuspend();
+}
+
+void State::EndSuspendTiming() {
+  CHECK(started_ && !finished_ && !error_occurred_);
+  timer_->EndSuspend();
+}
+
 void State::SkipWithError(const char* msg) {
   CHECK(msg);
   error_occurred_ = true;

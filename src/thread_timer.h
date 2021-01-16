@@ -33,18 +33,18 @@ class ThreadTimer {
     real_time_used_ += ChronoClockNow() - start_real_time_;
     // Floating point error can result in the subtraction producing a negative
     // time. Guard against that.
-    cpu_time_used_ += std::max<double>(
-        ReadCpuTimerOfChoice() - start_cpu_time_, 0);
+    cpu_time_used_ +=
+        std::max<double>(ReadCpuTimerOfChoice() - start_cpu_time_, 0);
   }
 
   void BeginSuspend() {
-    suspend_real_time_ -= ChronoClockNow();
-    suspend_cpu_time_ -= ReadCpuTimerOfChoice();
+    ignore_real_time_ -= ChronoClockNow();
+    ignore_cpu_time_ -= ReadCpuTimerOfChoice();
   }
 
   void EndSuspend() {
-    suspend_real_time_ += ChronoClockNow();
-    suspend_cpu_time_ += ReadCpuTimerOfChoice();
+    ignore_real_time_ += ChronoClockNow();
+    ignore_cpu_time_ += ReadCpuTimerOfChoice();
   }
 
   // Called by each thread
@@ -65,15 +65,15 @@ class ThreadTimer {
   }
 
   // REQUIRES: timer is not running
-  double real_time_suspended() const {
+  double real_time_ignored() const {
     CHECK(!running_);
-    return suspend_real_time_;
+    return ignore_real_time_;
   }
 
   // REQUIRES: timer is not running
-  double cpu_time_suspended() const {
+  double cpu_time_ignored() const {
     CHECK(!running_);
-    return suspend_cpu_time_;
+    return ignore_cpu_time_;
   }
 
   // REQUIRES: timer is not running
@@ -95,8 +95,8 @@ class ThreadTimer {
   double start_real_time_ = 0;  // If running_
   double start_cpu_time_ = 0;   // If running_
 
-  double suspend_real_time_ = 0;  // If running_
-  double suspend_cpu_time_ = 0;   // If running_
+  double ignore_real_time_ = 0;  // If running_
+  double ignore_cpu_time_ = 0;   // If running_
 
   // Accumulated time so far (does not contain current slice if running_)
   double real_time_used_ = 0;

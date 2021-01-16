@@ -521,8 +521,8 @@ class State {
   // within each benchmark iteration, if possible.
   void ResumeTiming();
 
-  void BeginSuspendTiming();
-  void EndSuspendTiming();
+  void BeginIgnoreTiming();
+  void EndIgnoreTiming();
 
   // REQUIRES: 'SkipWithError(...)' has not been called previously by the
   //            current thread.

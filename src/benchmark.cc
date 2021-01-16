@@ -170,12 +170,12 @@ void State::ResumeTiming() {
   timer_->StartTimer();
 }
 
-void State::BeginSuspendTiming() {
+void State::BeginIgnoreTiming() {
   CHECK(started_ && !finished_ && !error_occurred_);
   timer_->BeginSuspend();
 }
 
-void State::EndSuspendTiming() {
+void State::EndIgnoreTiming() {
   CHECK(started_ && !finished_ && !error_occurred_);
   timer_->EndSuspend();
 }

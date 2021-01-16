@@ -521,6 +521,9 @@ class State {
   // within each benchmark iteration, if possible.
   void ResumeTiming();
 
+  // Ignore timing done between these begin/end pairs.
+  // This is a lightweight alternative to the pause/resume functions, and will
+  // also not interfere with the duration of the benchmarks run.
   void BeginIgnoreTiming();
   void EndIgnoreTiming();
 

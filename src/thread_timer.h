@@ -44,7 +44,8 @@ class ThreadTimer {
 
   void EndSuspend() {
     ignore_real_time_ += ChronoClockNow();
-    ignore_cpu_time_ += ReadCpuTimerOfChoice();
+    ignore_cpu_time_ =
+        std::max<double>(ReadCpuTimerOfChoice() + ignore_cpu_time_, 0);
   }
 
   // Called by each thread

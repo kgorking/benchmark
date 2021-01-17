@@ -172,12 +172,12 @@ void State::ResumeTiming() {
 
 void State::BeginIgnoreTiming() {
   CHECK(started_ && !finished_ && !error_occurred_);
-  timer_->BeginSuspend();
+  timer_->BeginIgnore();
 }
 
 void State::EndIgnoreTiming() {
   CHECK(started_ && !finished_ && !error_occurred_);
-  timer_->EndSuspend();
+  timer_->EndIgnore();
 }
 
 void State::SkipWithError(const char* msg) {
